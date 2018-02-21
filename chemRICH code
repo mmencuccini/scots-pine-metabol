@@ -1,0 +1,52 @@
+
+##############  INSTALLATION ###############################
+if (!require("devtools"))
+  install.packages('devtools', repos="http://cran.rstudio.com/")
+if (!require("opencpu"))
+  install.packages('opencpu', repos="http://cran.rstudio.com/")
+if (!require("RCurl"))
+  install.packages('RCurl', repos="http://cran.rstudio.com/")
+source('https://bioconductor.org/biocLite.R')
+install_github('barupal/chemrich')
+
+############ LIBRARIES and OPEN CPU ########################################
+library(devtools)
+library(RCurl)
+library(opencpu)
+library(ChemRICH)
+library(pacman)
+
+# first open the server
+
+ocpu_start_app('barupal/chemrich')
+
+ocpu_start_app('fiehnlab.ucdavis.edu/barupal/chemrich')
+ocpu_start_app('fiehnlab/barupal/chemrich')
+ocpu_start_app('fiehnlab/ucdavis/edu/barupal/chemrich')
+ocpu_start_app('edu/ucdavis/fiehnlab/barupal/chemrich')
+ocpu_start_app('fiehnlab/ucdavis/edu/chemrich')
+ocpu_start_app('edu/ucdavis/fiehnlab/chemrich')
+ocpu_start_app('fiehnlab/chemrich')
+ocpu_start_app('fiehnlab/barupal/chemrich')
+
+
+# opencpu$browse('/library/ChemRICH/www')
+
+
+## REAL ChemRICH analysis  ################################
+setwd("Wilkinson")
+#Declare parameters and variables 
+
+InFile<-choose.files(default="C:/Users/m.mencuccini/Dropbox/My Documents/science/various.science.bits/Bayes/*.csv", 
+                     caption="Select Files",multi=TRUE) 
+chemRICH <- read.table(InFile, header=T, sep=",")
+pi <- with(chemRICH, duplicated(SMILES))
+doubles <- NA
+doubles <- which(pi, arr.ind = FALSE)
+if(length(doubles)==0) {
+  chemRICH2 <- chemRICH
+} else {
+  chemRICH2 <- chemRICH[-(doubles),]
+}
+# sign of logfold change is correct in chemRICH2, ie, positive means increase in D over C.
+stat_file = chemRICH2
